@@ -1,0 +1,22 @@
+name: deploy
+on: [push,workflow_dispatch]
+jobs:
+    test:
+        runs-on: ubuntu-latest
+        steps: 
+            - name: get code
+              uses: actions/checkout@v4
+            #   run: |
+            #     echo "to clone the repo"
+            #     echo "${{tojson(github)}}"
+            #     git clone   https://github.com/${{github.repository}}.git
+            - name: Install Nodejs
+              uses: actions/setup-node@v6
+              with: 
+                node-version: 20
+            - name: to print a verision
+              run: node -v
+            - name:   install dependencies
+              run: npm ci
+            - name: run test cases
+              run: npm run test  
