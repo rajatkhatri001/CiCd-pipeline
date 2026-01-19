@@ -7,7 +7,7 @@ on:
        - .github/**
 
 jobs: 
-   test:
+  Test:
     runs-on: ubuntu-latest
     steps: 
       - name: get code from the repo
@@ -28,11 +28,10 @@ jobs:
       - name: run test cases 
         run: npm run test
 
-
-
-   Deploy:
-    runs-on: ubuntu-latest
-    steps: 
+  Build:
+   needs: Test
+   runs-on: ubuntu-latest
+   steps: 
       - name: get code from the repo
         uses: actions/checkout@v4
       - name: Install the Nodejs
@@ -52,5 +51,23 @@ jobs:
         run: npm run test
       - name: build the application 
         run: npm run build 
+      - name: upload the Dist artifact
+        uses: actions/upload-artifact@v4
+        with: 
+          name: dist-files
+          path: dist
+    
+              
+
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Download Dist Artifact
+        uses: actions/download-artifact@v5
+        with: 
+          name: dist-files
+          path: dist
       - name: Deploy Test
         run: echo "Deploy Successfull"
+
