@@ -1,9 +1,9 @@
 name: Deploy 
 on: 
   push:
-    branched: 
+    branches: 
        - feature
-    path-ignore: 
+    paths-ignore: 
        - .github/**
 
 jobs: 
@@ -21,8 +21,8 @@ jobs:
       - name: cache Dependencies 
         uses: actions/cache@v4
         with: 
-          path: ~/.npm
-          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+         path: ~/.npm
+         key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json') }}
       - name: Install the node.js Dependencies
         run: npm ci
       - name: run test cases 
@@ -44,8 +44,8 @@ jobs:
       - name: cache Dependencies 
         uses: actions/cache@v4
         with: 
-          path: ~/.npm
-          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+         path: ~/.npm
+         key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json') }}
       - name: Install the node.js Dependencies
         run: npm ci
       - name: Run the Test Cases
