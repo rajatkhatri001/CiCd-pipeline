@@ -26,7 +26,7 @@ jobs:
       - name: Install the node.js Dependencies
         run: npm ci
       - name: run test cases 
-        run: node run test
+        run: npm run test
 
 
 
@@ -54,4 +54,3 @@ jobs:
         run: npm run build 
       - name: Deploy Test
         run: Echo "Deploy Successfull"
-
