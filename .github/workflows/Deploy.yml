@@ -1,13 +1,13 @@
 name: Deploy 
 on: 
   push:
-    branched: 
+    branches: 
        - feature
-    path-ignore: 
+    paths-ignore: 
        - .github/**
 
 jobs: 
-   test:
+  Test:
     runs-on: ubuntu-latest
     steps: 
       - name: get code from the repo
@@ -21,18 +21,17 @@ jobs:
       - name: cache Dependencies 
         uses: actions/cache@v4
         with: 
-          path: ~/.npm
-          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+         path: ~/.npm
+         key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json') }}
       - name: Install the node.js Dependencies
         run: npm ci
       - name: run test cases 
-        run: node run test
+        run: npm run test
 
-
-
-   Deploy:
-    runs-on: ubuntu-latest
-    steps: 
+  Build:
+   needs: Test
+   runs-on: ubuntu-latest
+   steps: 
       - name: get code from the repo
         uses: actions/checkout@v4
       - name: Install the Nodejs
@@ -44,14 +43,31 @@ jobs:
       - name: cache Dependencies 
         uses: actions/cache@v4
         with: 
-          path: ~/.npm
-          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+         path: ~/.npm
+         key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json') }}
       - name: Install the node.js Dependencies
         run: npm ci
       - name: Run the Test Cases
         run: npm run test
       - name: build the application 
         run: npm run build 
+      - name: upload the Dist artifact
+        uses: actions/upload-artifact@v4
+        with: 
+          name: dist-files
+          path: dist
+    
+              
+
+  Deploy:
+    needs: Build
+    runs-on: ubuntu-latest
+    steps: 
+      - name: Download Dist Artifact
+        uses: actions/download-artifact@v5
+        with: 
+          name: dist-files
+          path: dist
       - name: Deploy Test
-        run: Echo "Deploy Successfull"
+        run: echo "Deploy Successfull"
 
