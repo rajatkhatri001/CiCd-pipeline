@@ -1,5 +1,5 @@
 name: Deploy 
- on: 
+on: 
   push:
     branched: 
        - feature
@@ -32,7 +32,7 @@ jobs:
 
    Deploy:
     runs-on: ubuntu-latest
-       steps: 
+    steps: 
       - name: get code from the repo
         uses: actions/checkout@v4
       - name: Install the Nodejs
