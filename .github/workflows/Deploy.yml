@@ -53,4 +53,4 @@ jobs:
       - name: build the application 
         run: npm run build 
       - name: Deploy Test
-        run: Echo "Deploy Successfull"
+        run: echo "Deploy Successfull"
