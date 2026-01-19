@@ -1,47 +1,57 @@
-name: deploy
-
+name: Deploy 
 on: 
- push:
-    branches:
-        - main
-    paths-ignore:
-        - '**/README.md'
-        - .github/workflows/**
+  push:
+    branched: 
+       - feature
+    path-ignore: 
+       - .github/**
 
-jobs:
-    test:
-        runs-on: ubuntu-latest
-        steps:
-          - name: get code
-            uses: actions/checkout@v4
+jobs: 
+   test:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: get code from the repo
+        uses: actions/checkout@v4
+      - name: Install the Nodejs
+        uses: actions/setup-node@v6
+        with: 
+          node-version: 20
+      - name: Print the version 
+        run: node -v 
+      - name: cache Dependencies 
+        uses: actions/cache@v4
+        with: 
+          path: ~/.npm
+          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+      - name: Install the node.js Dependencies
+        run: npm ci
+      - name: run test cases 
+        run: node run test
 
-          - name: Install Node.js
-            uses: actions/setup-node@v4
-            with:
-                node-version: '20'
-          - name: Install Dependencies
-            run: npm ci
-          - name: run tests
-            run: npm run test
 
-    deploy:
-        needs: test
-        runs-on: ubuntu-latest
-        steps: 
-          - name: Get the code
-            uses: actions/checkout@v4
-          - name: Install the node
-            uses: action/setup-node@v6
-            with: 
-              node-verision: 20
-          - name: cache Dependencies 
-            uses: actions/cache@v4
-            with: 
-              path: ~/.npm
-              key: ${{runner.os}}-node-${{hashFiles('**/package-lock.json') }}  
-          - name: Install Dependencies 
-            run: npm ci 
-          - name: run tests
-            run: npm run test
-          - name: deploy to production
-            run: echo "deploying to production server"
+
+   Deploy:
+    runs-on: ubuntu-latest
+    steps: 
+      - name: get code from the repo
+        uses: actions/checkout@v4
+      - name: Install the Nodejs
+        uses: actions/setup-node@v6
+        with: 
+          node-version: 20
+      - name: Print the version 
+        run: node -v 
+      - name: cache Dependencies 
+        uses: actions/cache@v4
+        with: 
+          path: ~/.npm
+          key: ${{runner.os}}-node-${{hashFiles('**/package-lock
+      - name: Install the node.js Dependencies
+        run: npm ci
+      - name: Run the Test Cases
+        run: npm run test
+      - name: build the application 
+        run: npm run build 
+      - name: Deploy Test
+        run: Echo "Deploy Successfull"
+
